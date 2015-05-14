@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<!-- declaramos la ng-app, define el punto de entrada de la app -->
+<html ng-app="parking">
+    <head>
+        <title>Control de Parking</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <script src="lib/jquery-1.11.2.min.js" type="text/javascript"></script>
+        <script src="lib/bootstrap.min.js" type="text/javascript"></script>
+        
+        <script src="lib/angular.min.js" type="text/javascript"></script>
+        <script src="lib/angular-sanitize.min.js" type="text/javascript"></script>
+        <script src="lib/angular-animate.min.js" type="text/javascript"></script>
+        
+        <script src="js/app.js" type="text/javascript"></script>
+        <script src="js/controllers.js" type="text/javascript"></script>
+        <script src="js/directives.js" type="text/javascript"></script>
+        <script src="js/filters.js" type="text/javascript"></script>
+        
+        <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+        <link href="css/layout.css" rel="stylesheet" type="text/css"/>
+        <link href="css/style.css" rel="stylesheet" type="text/css"/>
+    </head>
+    <body ng-controller="parkingCtrl">
+        
+        <div ng-include="'menu.html'"></div>
+        
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-3 col-md-2 sidebar">
+                    <ul class="nav nav-sidebar">
+                      <li class="active"><a href="#">Aparcamiento</a></li>  
+                    </ul>                    
+                </div>
+                
+                <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+                    <h1 class="page-header" ng-bind="titApartado"></h1>
+                    
+                    <!-- mostramos tabla si hay coches -->
+                    <div ng-show="coches.length > 0">
+
+                        <!-- filtro de busqueda -->
+                        <input type="text" ng-model='busqueda' placeholder="Qué buscas?" />
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th><a href="" ng-click="field='matricula'; order=!order">Matrícula</a></th>
+                                    <th><a href="" ng-click="field='entrada'; order=!order">Entrada</a></th>
+                                    <th><a href="" ng-click="field='color'; order=!order">Color</a></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- repetimos las filas con los valores del array, aplicando filtro de busqueda y orden por cabeceras -->
+                                <!-- asignamos clase selected cuando seleccionen el coche con el checkbox -->
+                                <tr ng-repeat="coche in coches|filter:busqueda|orderBy:field:order" ng-class="{selected: coche.selected}">
+
+                                    <td><input type="checkbox" ng-model="coche.selected"/></td>
+                                    <td>{{coche.matricula|matricula}}</td>
+                                    <td>{{coche.entrada|date:"dd/MM/yyyy"}}</td> <!-- filtro de fecha aplicado -->
+
+                                    <!-- color de la tipo con el color seleccionado del coche, el css lo pilla xq estan en ingles -->
+                                    <td><span ng-style="{color: coche.color}">{{coche.color}}</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- ocultamos mensaje si hay coches -->
+                    <div ng-hide="coches.length > 0">
+                        <div class="alert alert-warning" role="alert">
+                            El parking está vacío
+                        </div>
+                    </div>
+                    
+                    <form class="form-inline">
+                        <div class="form-group">
+                            <label class="sr-only" for="matricula">Matrícula</label>
+                          
+                            <!-- con ng-model asignamos donde se va a guardar el dato dentro del array -->
+                            <input type="text" class="form-control" id="matricula" placeholder="Matrícula" ng-model="coche.matricula">
+                        </div>
+                        <div class="form-group">
+                            <label class="sr-only" for="color">Color</label>
+                            
+                            <!-- rellenamos el select con los colores del array -->
+                            <select class="form-control" ng-model="coche.color" ng-options="color for color in colores"></select>
+                        </div>
+                        
+                        <!-- ng-click, función a la que llama al hacer click en el botón, boton desactivado si no meten matricula ni color -->
+                        <button ng-click="park(coche)" ng-disabled="!coche.matricula || !coche.color" class="btn btn-success">Registrar</button> 
+                        
+                    </form>
+                    
+                    <p>&nbsp;</p>
+                    <div info></div>
+                </div>
+                
+            </div>
+        </div>
+        
+    </body>
+</html>

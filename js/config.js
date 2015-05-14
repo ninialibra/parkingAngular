@@ -1,0 +1,1 @@
+parking.config(function ($routeProvider) {     $routeProvider.       when("/parking", {         templateUrl: "views/parking.html",         controller: "parkingCtrl"     }).        when("/car/:id", {          templateUrl: "views/car.html",          controller: "carCtrl"     }).     otherwise({       redirectTo: '/parking'     });});

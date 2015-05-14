@@ -1,0 +1,65 @@
+<h1 class="page-header" ng-bind="titApartado"></h1>
+
+<!-- mostramos tabla si hay coches -->
+<div ng-show="coches.length > 0">
+
+    <!-- filtro de busqueda -->
+    <form class="form-inline">
+        <div class="form-group">
+          <input type="text" class="form-control marginBottom20" ng-model='busqueda' placeholder="Buscar por matrícula" />
+        </div>
+    </form>
+
+    <table class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <th></th>
+                <th><a href="" ng-click="field='matricula'; order=!order">Matrícula</a></th>
+                <th><a href="" ng-click="field='entrada'; order=!order">Entrada</a></th>
+                <th><a href="" ng-click="field='color'; order=!order">Color</a></th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- repetimos las filas con los valores del array, aplicando filtro de busqueda y orden por cabeceras -->
+            <!-- asignamos clase selected cuando seleccionen el coche con el checkbox -->
+            <tr ng-repeat="coche in coches|filter:busqueda|orderBy:field:order" ng-class="{selected: coche.selected}">
+
+                <td><input type="checkbox" ng-model="coche.selected"/></td>
+                <td><a href="#/car/{{coche.id}}">{{coche.matricula}}</a></td>
+                <td>{{coche.entrada|date:"dd/MM/yyyy"}}</td> <!-- filtro de fecha aplicado -->
+
+                <!-- color de la tipo con el color seleccionado del coche, el css lo pilla xq estan en ingles -->
+                <td><span ng-style="{color: coche.color}">{{coche.color}}</span></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- ocultamos mensaje si hay coches -->
+<div ng-hide="coches.length > 0">
+    <div class="alert alert-warning" role="alert">
+        El parking está vacío
+    </div>
+</div>
+
+<form name="carForm" class="form-inline">
+    <div class="form-group">
+        <label class="sr-only" for="matricula">Matrícula</label>
+
+        <!-- con ng-model asignamos donde se va a guardar el dato dentro del array -->
+        <input type="text" class="form-control" id="matricula" placeholder="Matrícula" ng-model="coche.matricula">
+    </div>
+    <div class="form-group">
+        <label class="sr-only" for="color">Color</label>
+
+        <!-- rellenamos el select con los colores del array -->
+        <select class="form-control" ng-model="coche.color" ng-options="color for color in colores"></select>
+    </div>
+
+    <!-- ng-click, función a la que llama al hacer click en el botón, boton desactivado si no meten matricula ni color -->
+    <button ng-click="park(coche)" ng-disabled="!coche.matricula || !coche.color" class="btn btn-success">Registrar</button>
+
+</form>
+
+<p>&nbsp;</p>
+<div info></div>

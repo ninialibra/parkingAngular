@@ -1,2 +1,4 @@
 # parkingAngular
-Only for test
+Registro de vehículos en parking.
+
+Learning Angular.js.
